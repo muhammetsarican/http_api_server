@@ -3,12 +3,6 @@
 import url from "url";
 import http from "http";
 
-const handlers = {}
-handlers.ping = (data, callback) => {
-    callback(200, { data: 'Hello World!!' })
-}
-handlers.notFound = (data, callback) => { callback(404, { data: 'Requested path not found' }) }
-
 class App {
     path = "/";
 
@@ -17,18 +11,28 @@ class App {
             res.setHeader('content-type', 'application/json');
             this.req = req;
             this.res = res;
+            this.res.status = function (statusCode = "200") {
+                this.writeHead(statusCode);
+                return this;
+            };
+
+            this.res.send = function (message) {
+                this.end(JSON.stringify(message));
+                return this;
+            };
+
 
             this.reqURL = url.parse(req.url, true);
             this.pathName = this.reqURL.pathname;
             this.reqMethod = req.method;
             this.headers = req.headers;
 
-            this.routeTo()
+            this.routeTo();
         })
     }
 
     routeTo() {
-        const pathParts = this.pathName.split("/").map(element => "/" + element);
+        const pathParts = new Set(this.pathName.split("/").map(element => "/" + element));
         try {
             let mainPath = this;
 

@@ -6,12 +6,12 @@ import ApiError from "./error/ApiError.js";
 const app = new App();
 app.initServer();
 
-app.get((res) => { res?.end("get router") })
-
-const BaseRouter = new Router();
-BaseRouter.route("/user").get((res) => { res.end("get base router") });
-
-app.use("/BaseRouter", BaseRouter);
+app.get((res) => {
+    res.status(200).send({
+        success: true,
+        message: "Welcome my custom server"
+    })
+})
 
 app.error(ApiError(404, {
     success: false,
