@@ -1,0 +1,14 @@
+version: '3.7'
+services:
+  db:
+    image: mongo:latest
+    container_name: without_express_server-db
+    env_file:
+      - ./.env
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    volumes:
+      - data:/Docker/data/db/without_express_server/
+
+volumes:
+  data:
