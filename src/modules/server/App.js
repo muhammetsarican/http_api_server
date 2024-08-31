@@ -6,28 +6,39 @@ import http from "http";
 class App {
     path = "/";
 
+    preProcess(req, res) {
+        this.req = req;
+        this.res = res;
+        this.res.status = function (statusCode = "200") {
+            this.writeHead(statusCode);
+            return this;
+        };
+
+        this.res.send = function (message) {
+            this.end(JSON.stringify(message));
+            return this;
+        };
+
+
+        this.reqURL = url.parse(req.url, true);
+        this.pathName = this.reqURL.pathname;
+        this.reqMethod = req.method;
+        this.headers = req.headers;
+    }
+
     initServer() {
         this.server = http.createServer((req, res) => {
             res.setHeader('content-type', 'application/json');
-            this.req = req;
-            this.res = res;
-            this.res.status = function (statusCode = "200") {
-                this.writeHead(statusCode);
-                return this;
-            };
 
-            this.res.send = function (message) {
-                this.end(JSON.stringify(message));
-                return this;
-            };
+            req.on('data', (chunk) => {
+                req.body = [chunk];
+            }).on('end', () => {
+                if (req.body) req.body = JSON.parse(Buffer.concat(req.body).toString());
 
+                this.preProcess(req, res);
 
-            this.reqURL = url.parse(req.url, true);
-            this.pathName = this.reqURL.pathname;
-            this.reqMethod = req.method;
-            this.headers = req.headers;
-
-            this.routeTo();
+                this.routeTo();
+            })
         })
     }
 
