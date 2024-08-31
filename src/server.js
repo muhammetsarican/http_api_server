@@ -1,7 +1,10 @@
-import "dotenv/config"
-import ApiError from "./error/ApiError.js";
-import database from "./loaders/database/index.js";
 import App from "./modules/server/App.js";
+import ApiError from "./error/ApiError.js";
+
+import "dotenv/config"
+import database from "./loaders/database/index.js";
+
+import ProductRoute from "./routes/ProductRoute.js";
 
 // database connection
 database();
@@ -19,6 +22,8 @@ app.get((res) => {
         message: "Welcome my custom server"
     })
 })
+
+app.use("/product", ProductRoute.init());
 
 // error route created
 app.error(ApiError(404, {

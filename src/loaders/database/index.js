@@ -1,16 +1,33 @@
-import mongoose from "mongoose";
+import { MongoClient } from "mongodb";
 
-const db = mongoose.connection;
+const dbURI = `mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}`;
 
-db.once("open", () => {
-    process.env.NODE_ENV == "development" && console.log("DB connection is successful!");
-})
+const client = new MongoClient(dbURI);
+
+let db = null;
 
 const connectDB = async () => {
-    const dbURI = `mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`;
-    await mongoose.connect(dbURI);
+    await client.connect();
+
+    db = client.db(process.env.DB_NAME);
+
+    return db;
+}
+
+const database = () => {
+    return db && db;
+}
+
+export {
+    database
 }
 
 export default () => {
-    connectDB();
-}
+    connectDB()
+        .then(() => {
+            process.env.NODE_ENV == "development" && console.log("DB connection is successful!");
+        })
+        .catch((err) => {
+            process.env.NODE_ENV == "development" && console.log(`DB connection failed!, ${err}`);
+        })
+};

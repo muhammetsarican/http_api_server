@@ -40,7 +40,7 @@ class App {
                 mainPath = mainPath[part];
             }
 
-            mainPath[this.reqMethod](this.res);
+            mainPath[this.reqMethod](this.req, this.res);
         }
         catch {
             this["/error"](this.res)
@@ -53,28 +53,28 @@ class App {
     }
 
     get(...middlewares) {
-        this[this.path] = { "GET": middlewares[middlewares.length - 1] };
+        this[this.path] = { ...this[this.path], "GET": middlewares[middlewares.length - 1] };
         middlewares.length > 1 && middlewares.forEach(middleware => {
             middleware(req, res);
         })
         return this;
     }
     post(...middlewares) {
-        this[this.path] = { "POST": middlewares[middlewares.length - 1] };
+        this[this.path] = { ...this[this.path], "POST": middlewares[middlewares.length - 1] };
         middlewares.length > 1 && middlewares.forEach(middleware => {
             middleware(req, res);
         })
         return this;
     }
     patch(...middlewares) {
-        this[this.path] = { "PATCH": middlewares[middlewares.length - 1] };
+        this[this.path] = { ...this[this.path], "PATCH": middlewares[middlewares.length - 1] };
         middlewares.length > 1 && middlewares.forEach(middleware => {
             middleware(req, res);
         })
         return this;
     }
     delete(...middlewares) {
-        this[this.path] = { "DELETE": middlewares[middlewares.length - 1] };
+        this[this.path] = { ...this[this.path], "DELETE": middlewares[middlewares.length - 1] };
         middlewares.length > 1 && middlewares.forEach(middleware => {
             middleware(req, res);
         })
