@@ -7,10 +7,6 @@ class BaseController {
 
     createOne() {
         return (req, res) => {
-            req.body = {
-                _id: new mongodb.ObjectId(),
-                title: "Product 3"
-            }
             this.Service.insertOne(req.body)
                 .then(response => {
                     res.status(201).send({
@@ -19,7 +15,7 @@ class BaseController {
                     })
                 })
                 .catch(err => {
-                    res.status(401).send({
+                    res.status(400).send({
                         success: false,
                         message: err.message
                     })
@@ -37,7 +33,7 @@ class BaseController {
                     })
                 })
                 .catch(err => {
-                    res.status(401).send({
+                    res.status(400).send({
                         success: false,
                         message: err.message
                     })
@@ -55,9 +51,51 @@ class BaseController {
                     })
                 })
                 .catch(err => {
-                    res.status(401).send({
+                    res.status(400).send({
                         success: false,
-                        message: "err.message"
+                        message: err.message
+                    })
+                })
+        }
+    }
+
+    update() {
+        return (req, res) => {
+            this.Service.update({
+                _id: new mongodb.ObjectId(req?.params?.id)
+            }, {
+                $set: req.body
+            })
+                .then(response => {
+                    res.status(200).send({
+                        success: true,
+                        message: response
+                    })
+                })
+                .catch(err => {
+                    res.status(400).send({
+                        success: false,
+                        message: err.message
+                    })
+                })
+        }
+    }
+
+    delete() {
+        return (req, res) => {
+            this.Service.delete({
+                _id: new mongodb.ObjectId(req?.params?.id)
+            })
+                .then(response => {
+                    res.status(200).send({
+                        success: true,
+                        message: response
+                    })
+                })
+                .catch(err => {
+                    res.status(400).send({
+                        success: false,
+                        message: err.message
                     })
                 })
         }

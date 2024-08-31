@@ -16,6 +16,14 @@ class BaseService {
     async find() {
         return await db().collection(this.Collection).find({}).toArray();
     }
+
+    async update(where, data) {
+        return await db().collection(this.Collection).updateOne(where, data);
+    }
+
+    async delete(where) {
+        return await db().collection(this.Collection).deleteOne(where);
+    }
 }
 
 export default BaseService;

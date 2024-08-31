@@ -18,10 +18,20 @@ class BaseRoute {
         this.Router.route("/readOne").get(this.Controller.readOne());
     }
 
+    update() {
+        this.Router.route("/update/:id").patch(this.Controller.update());
+    }
+
+    delete() {
+        this.Router.route("/delete/:id").delete(this.Controller.delete());
+    }
+
     init() {
         this.create();
         this.read();
         this.readOne();
+        this.update();
+        this.delete();
         return this.Router;
     }
 }
