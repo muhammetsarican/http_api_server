@@ -8,6 +8,7 @@ class App {
 
     preProcess(req, res) {
         this.req = req;
+
         this.res = res;
         this.res.status = function (statusCode = "200") {
             this.writeHead(statusCode);
@@ -18,7 +19,6 @@ class App {
             this.end(JSON.stringify(message));
             return this;
         };
-
 
         this.reqURL = url.parse(req.url, true);
         this.pathName = this.reqURL.pathname;
@@ -42,13 +42,36 @@ class App {
         })
     }
 
+    // this method detects route has any param or not
+    findParams(path) {
+        if (this.req.params && Object.keys(this.req.params).map(param => {
+            if (Object.keys(path).includes(`/:${param}`) && !this.req.params.param) {
+                return param
+            };
+        }).length) return true;
+
+        return false;
+    }
+
     routeTo() {
-        const pathParts = new Set(this.pathName.split("/").map(element => "/" + element));
+        const pathParts = this.pathName.split("/").map(element => "/" + element);
         try {
             let mainPath = this;
 
             for (const part of pathParts) {
-                mainPath = mainPath[part];
+                // here set the req params from route 
+                if (mainPath.params) this.req.params = mainPath.params;
+
+                // check route part is exist on your route
+                if (Object.keys(mainPath).includes(part)) {
+                    mainPath = mainPath[part];
+                }
+                // here check param exist on coming request and assign the object req var
+                else if (this.findParams(mainPath)) {
+                    const nextPath = Object.keys(mainPath)[0];
+                    this.req.params[nextPath.substring(nextPath.indexOf(":") + 1)] = part.substring(part.indexOf("/") + 1);
+                    mainPath = mainPath[nextPath];
+                }
             }
 
             mainPath[this.reqMethod](this.req, this.res);
@@ -63,29 +86,48 @@ class App {
         return this;
     }
 
+    addMethodToRightPath(route, method) {
+        if (route) {
+            if (!Object.keys(route).length) {
+                return Object.assign(route, method)
+            };
+            if (Object.keys(route)[0] != "params") this.addMethodToRightPath(route[Object.keys(route)[0]], method);
+            else return Object.assign(route, method);
+        }
+        return route;
+    }
+
     get(...middlewares) {
-        this[this.path] = { ...this[this.path], "GET": middlewares[middlewares.length - 1] };
+        this[this.path] = this.addMethodToRightPath(this[this.path], { "GET": middlewares[middlewares.length - 1] });
+
+        // this[this.path] = { ...this[this.path], "GET": middlewares[middlewares.length - 1] };
         middlewares.length > 1 && middlewares.forEach(middleware => {
             middleware(req, res);
         })
         return this;
     }
     post(...middlewares) {
-        this[this.path] = { ...this[this.path], "POST": middlewares[middlewares.length - 1] };
+        this[this.path] = this.addMethodToRightPath(this[this.path], { "POST": middlewares[middlewares.length - 1] });
+
+        // this[this.path] = { ...this[this.path], "POST": middlewares[middlewares.length - 1] };
         middlewares.length > 1 && middlewares.forEach(middleware => {
             middleware(req, res);
         })
         return this;
     }
     patch(...middlewares) {
-        this[this.path] = { ...this[this.path], "PATCH": middlewares[middlewares.length - 1] };
+        this[this.path] = this.addMethodToRightPath(this[this.path], { "PATCH": middlewares[middlewares.length - 1] });
+
+        // this[this.path] = { ...this[this.path], "PATCH": middlewares[middlewares.length - 1] };
         middlewares.length > 1 && middlewares.forEach(middleware => {
             middleware(req, res);
         })
         return this;
     }
     delete(...middlewares) {
-        this[this.path] = { ...this[this.path], "DELETE": middlewares[middlewares.length - 1] };
+        this[this.path] = this.addMethodToRightPath(this[this.path], { "DELETE": middlewares[middlewares.length - 1] });
+
+        // this[this.path] = { ...this[this.path], "DELETE": middlewares[middlewares.length - 1] };
         middlewares.length > 1 && middlewares.forEach(middleware => {
             middleware(req, res);
         })
