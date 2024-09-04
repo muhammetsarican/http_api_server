@@ -1,3 +1,4 @@
+import AuthenticateUser from "../middlewares/AuthenticateUser.js";
 import Router from "../modules/server/Router.js";
 
 class BaseRoute {
@@ -7,7 +8,7 @@ class BaseRoute {
     }
 
     create() {
-        this.Router.route("/create").post(this.Controller.createOne());
+        this.Router.route("/create").post(AuthenticateUser, this.Controller.createOne());
     }
 
     read() {
@@ -15,7 +16,7 @@ class BaseRoute {
     }
 
     readOne() {
-        this.Router.route("/readOne").get(this.Controller.readOne());
+        this.Router.route("/readOne/:id").get(this.Controller.readOne());
     }
 
     update() {

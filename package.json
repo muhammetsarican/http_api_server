@@ -1,5 +1,5 @@
 {
-  "name": "job-application-project",
+  "name": "http-api-server-project",
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "dotenv": "^16.4.5",
+    "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.8.0"
   }
 }

@@ -2,6 +2,7 @@
 
 import url from "url";
 import http from "http";
+import clo from "../../helpers/CustomConsoleLog.js";
 
 class App {
     path = "/";
@@ -74,11 +75,24 @@ class App {
                 }
             }
 
-            mainPath[this.reqMethod](this.req, this.res);
+            try {
+                mainPath.middlewares?.map(middleware => {
+                    middleware(this.req, this.res, this.next);
+                })
+
+                mainPath[this.reqMethod](this.req, this.res);
+            }
+            catch (err) {
+                clo.g(err);
+            }
         }
         catch {
             this["/error"](this.res)
         }
+    }
+
+    next(cb) {
+        throw cb();
     }
 
     use(path, router) {
@@ -98,39 +112,67 @@ class App {
     }
 
     get(...middlewares) {
-        this[this.path] = this.addMethodToRightPath(this[this.path], { "GET": middlewares[middlewares.length - 1] });
-
-        // this[this.path] = { ...this[this.path], "GET": middlewares[middlewares.length - 1] };
-        middlewares.length > 1 && middlewares.forEach(middleware => {
-            middleware(req, res);
+        this[this.path] = {
+            ...this[this.path],
+            middlewares: []
+        }
+        middlewares.forEach((middleware, index) => {
+            if (index === middlewares.length - 1) {
+                this[this.path] = this.addMethodToRightPath(this[this.path], { "GET": middleware });
+            }
+            else {
+                this[this.path].middlewares.push(middleware);
+            }
         })
+
         return this;
     }
     post(...middlewares) {
-        this[this.path] = this.addMethodToRightPath(this[this.path], { "POST": middlewares[middlewares.length - 1] });
-
-        // this[this.path] = { ...this[this.path], "POST": middlewares[middlewares.length - 1] };
-        middlewares.length > 1 && middlewares.forEach(middleware => {
-            middleware(req, res);
+        this[this.path] = {
+            ...this[this.path],
+            middlewares: []
+        }
+        middlewares.forEach((middleware, index) => {
+            if (index === middlewares.length - 1) {
+                this[this.path] = this.addMethodToRightPath(this[this.path], { "POST": middleware });
+            }
+            else {
+                this[this.path].middlewares.push(middleware);
+            }
         })
+
         return this;
     }
     patch(...middlewares) {
-        this[this.path] = this.addMethodToRightPath(this[this.path], { "PATCH": middlewares[middlewares.length - 1] });
-
-        // this[this.path] = { ...this[this.path], "PATCH": middlewares[middlewares.length - 1] };
-        middlewares.length > 1 && middlewares.forEach(middleware => {
-            middleware(req, res);
+        this[this.path] = {
+            ...this[this.path],
+            middlewares: []
+        }
+        middlewares.forEach((middleware, index) => {
+            if (index === middlewares.length - 1) {
+                this[this.path] = this.addMethodToRightPath(this[this.path], { "PATCH": middleware });
+            }
+            else {
+                this[this.path].middlewares.push(middleware);
+            }
         })
+
         return this;
     }
     delete(...middlewares) {
-        this[this.path] = this.addMethodToRightPath(this[this.path], { "DELETE": middlewares[middlewares.length - 1] });
-
-        // this[this.path] = { ...this[this.path], "DELETE": middlewares[middlewares.length - 1] };
-        middlewares.length > 1 && middlewares.forEach(middleware => {
-            middleware(req, res);
+        this[this.path] = {
+            ...this[this.path],
+            middlewares: []
+        }
+        middlewares.forEach((middleware, index) => {
+            if (index === middlewares.length - 1) {
+                this[this.path] = this.addMethodToRightPath(this[this.path], { "DELETE": middleware });
+            }
+            else {
+                this[this.path].middlewares.push(middleware);
+            }
         })
+
         return this;
     }
 

@@ -26,7 +26,7 @@ class BaseController {
     readOne() {
         return (req, res) => {
             this.Service.findOne({
-                _id: new mongodb.ObjectId(req?.params.id)
+                _id: new mongodb.ObjectId(req?.params?.id)
             })
                 .then(response => {
                     res.status(200).send({
