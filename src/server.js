@@ -5,6 +5,7 @@ import "dotenv/config"
 import database from "./loaders/database/index.js";
 
 import ProductRoute from "./routes/ProductRoute.js";
+import clo from "./helpers/CustomConsoleLog.js";
 
 // database connection
 database();
@@ -35,5 +36,5 @@ app.error(ApiError(404, {
 const PORT = process.env.SERVER_PORT;
 
 app.listen(PORT, () => {
-    process.env.NODE_ENV == "development" && console.log(`Server running on ${PORT} port.`)
+    clo.g(`Server running on ${PORT} port.`)
 })

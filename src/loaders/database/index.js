@@ -1,4 +1,5 @@
 import { MongoClient } from "mongodb";
+import clo from "../../helpers/CustomConsoleLog.js";
 
 const dbURI = `mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}`;
 
@@ -25,9 +26,9 @@ export {
 export default () => {
     connectDB()
         .then(() => {
-            process.env.NODE_ENV == "development" && console.log("DB connection is successful!");
+            clo.g("DB connection is successful!");
         })
         .catch((err) => {
-            process.env.NODE_ENV == "development" && console.log(`DB connection failed!, ${err}`);
+            clo.g(`DB connection failed!, ${err}`);
         })
 };
