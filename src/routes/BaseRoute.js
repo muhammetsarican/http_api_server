@@ -3,14 +3,14 @@ import ValidateSchema from "../middlewares/ValidateSchema.js";
 import Router from "../modules/server/Router.js";
 
 class BaseRoute {
-    constructor(Controller, Schema, PrevRouter = new Router()) {
+    constructor(Controller, schemas, PrevRouter = new Router()) {
         this.Controller = Controller;
-        this.Schema = Schema;
+        this.schemas = schemas;
         this.Router = PrevRouter;
     }
 
     create() {
-        this.Router.route("/create").post(ValidateSchema(this.Schema), AuthenticateUser, this.Controller.createOne());
+        this.Router.route("/create").post(ValidateSchema(this.schemas.createValidation), AuthenticateUser, this.Controller.createOne());
     }
 
     read() {

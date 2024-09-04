@@ -6,6 +6,6 @@ const createValidation = Joi.object({
     description: Joi.string().min(10)
 })
 
-export {
+export const schemas = {
     createValidation
 }

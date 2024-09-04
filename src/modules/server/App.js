@@ -2,7 +2,6 @@
 
 import url from "url";
 import http from "http";
-import clo from "../../helpers/CustomConsoleLog.js";
 
 class App {
     path = "/";
@@ -35,6 +34,7 @@ class App {
                 req.body = [chunk];
             }).on('end', () => {
                 if (req.body) req.body = JSON.parse(Buffer.concat(req.body).toString());
+                else req.body = {};
 
                 this.preProcess(req, res);
 
@@ -83,7 +83,7 @@ class App {
                 mainPath[this.reqMethod](this.req, this.res);
             }
             catch (err) {
-                clo.g(err);
+                throw err;
             }
         }
         catch {

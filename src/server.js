@@ -6,6 +6,7 @@ import database from "./loaders/database/index.js";
 
 import ProductRoute from "./routes/ProductRoute.js";
 import clo from "./helpers/CustomConsoleLog.js";
+import UserRoute from "./routes/UserRoute.js";
 
 // database connection
 database();
@@ -25,6 +26,7 @@ app.get((res) => {
 })
 
 app.use("/product", ProductRoute.init());
+app.use("/user", UserRoute.init());
 
 // error route created
 app.error(ApiError(404, {

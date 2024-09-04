@@ -1,3 +1,4 @@
+import { ReturnDocument } from "mongodb";
 import { database as db } from "../loaders/database/index.js";
 
 class BaseService {
@@ -6,7 +7,7 @@ class BaseService {
     }
 
     async insertOne(data) {
-        return await db().collection(this.Collection).insertOne(data);
+        return await db().collection(this.Collection).insertOne(data, { upsert: true, returnDocument: "after" });
     }
 
     async findOne(data) {
