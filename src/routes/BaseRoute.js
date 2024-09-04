@@ -1,14 +1,16 @@
 import AuthenticateUser from "../middlewares/AuthenticateUser.js";
+import ValidateSchema from "../middlewares/ValidateSchema.js";
 import Router from "../modules/server/Router.js";
 
 class BaseRoute {
-    constructor(Controller, PrevRouter = new Router()) {
+    constructor(Controller, Schema, PrevRouter = new Router()) {
         this.Controller = Controller;
+        this.Schema = Schema;
         this.Router = PrevRouter;
     }
 
     create() {
-        this.Router.route("/create").post(AuthenticateUser, this.Controller.createOne());
+        this.Router.route("/create").post(ValidateSchema(this.Schema), AuthenticateUser, this.Controller.createOne());
     }
 
     read() {
