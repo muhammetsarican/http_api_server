@@ -54,6 +54,18 @@ class App {
         return false;
     }
 
+    runMiddlewares(index, path) {
+        if (index < path?.middlewares?.length) {
+            path.middlewares[index](this.req, this.res, (err) => {
+                if (err) return this.next(err);
+                this.runMiddlewares(index + 1, path)
+            });
+        }
+        else {
+            path[this.reqMethod](this.req, this.res);
+        }
+    }
+
     routeTo() {
         const pathParts = this.pathName.split("/").map(element => "/" + element);
         try {
@@ -76,11 +88,7 @@ class App {
             }
 
             try {
-                mainPath.middlewares?.map(middleware => {
-                    middleware(this.req, this.res, this.next);
-                })
-
-                mainPath[this.reqMethod](this.req, this.res);
+                this.runMiddlewares(0, mainPath)
             }
             catch (err) {
                 throw err;

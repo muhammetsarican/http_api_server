@@ -8,4 +8,6 @@ export default (schema) => (req, res, next) => {
         res.status(400).send(new CustomError(err));
         return new Error(err);
     })
+
+    next();
 }

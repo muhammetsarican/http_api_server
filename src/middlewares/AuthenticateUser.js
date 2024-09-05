@@ -22,6 +22,7 @@ export default (req, res, next) => {
                         return new Error("No records found!");
                     })
                     req.user = response;
+                    next();
                 })
                 .catch(err => {
                     return next(() => {
