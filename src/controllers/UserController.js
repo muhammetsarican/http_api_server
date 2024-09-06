@@ -1,3 +1,4 @@
+import { logger } from "../scripts/logger/UserLogger.js";
 import UserService from "../services/UserService.js";
 import { generateAccessToken, generateRefreshToken } from "../utils/GenerateTokens.js";
 import HashPassword from "../utils/HashPassword.js";
@@ -26,6 +27,7 @@ class UserController extends BaseController {
                             }
                         }
                     })
+                    logger.log("info", response);
                 })
                 .catch(err => {
                     res.status(400).send({
