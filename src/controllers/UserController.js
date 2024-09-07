@@ -21,14 +21,9 @@ class UserController extends BaseController {
                 .then(response => {
                     res.status(201).send({
                         success: true,
-                        message: {
-                            user: response,
-                            tokens: {
-                                access_token: generateAccessToken(response),
-                                refresh_token: generateRefreshToken(response)
-                            }
-                        }
+                        message: response
                     })
+
                     UserLogger.log("info", response);
                 })
                 .catch(err => {
@@ -36,6 +31,8 @@ class UserController extends BaseController {
                         success: false,
                         message: err.message
                     })
+
+                    UserLogger.log("error", err.message);
                 })
         }
     }
@@ -54,12 +51,76 @@ class UserController extends BaseController {
                         success: true,
                         message: response
                     })
+
+                    UserLogger.log("info", response);
                 })
                 .catch(err => {
                     res.status(400).send({
                         success: false,
                         message: err.message
                     })
+
+                    UserLogger.log("error", err.message);
+                })
+        }
+    }
+
+    login() {
+        return (req, res) => {
+            req.body.password = HashPassword(req.body.password);
+            UserService.findOne(req.body)
+                .then(response => {
+                    if (!response) throw new Error("No record found!");
+                    res.status(200).send({
+                        success: true,
+                        message: {
+                            user: response,
+                            tokens: {
+                                access_token: generateAccessToken(response),
+                                refresh_token: generateRefreshToken(response)
+                            }
+                        }
+                    })
+
+                    UserLogger.log("info", response);
+                })
+                .catch(err => {
+                    res.status(400).send({
+                        success: false,
+                        message: err.message
+                    })
+
+                    UserLogger.log("error", err.message);
+                })
+        }
+    }
+
+    register() {
+        return (req, res) => {
+            req.body.password = HashPassword(req.body.password);
+
+            UserService.insertOne(req.body)
+                .then(response => {
+                    res.status(201).send({
+                        success: true,
+                        message: {
+                            user: response,
+                            tokens: {
+                                access_token: generateAccessToken(response),
+                                refresh_token: generateRefreshToken(response)
+                            }
+                        }
+                    })
+
+                    UserLogger.log("info", response);
+                })
+                .catch(err => {
+                    res.status(400).send({
+                        success: false,
+                        message: err.message
+                    })
+
+                    UserLogger.log("error", err.message);
                 })
         }
     }

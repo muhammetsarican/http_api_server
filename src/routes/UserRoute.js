@@ -8,13 +8,18 @@ class UserRoute extends BaseRoute {
         super(UserController, schemas)
     }
 
-    create() {
-        this.Router.route("/create").post(ValidateSchema(schemas.createValidation), UserController.createOne());
+    login() {
+        this.Router.route("/login").post(ValidateSchema(schemas.loginValidation), UserController.login());
+    }
+
+    register() {
+        this.Router.route("/register").post(ValidateSchema(schemas.registerValidation), UserController.register());
     }
 
     init() {
         this.Router = super.init();
-        this.create();
+        this.login();
+        this.register();
         return this.Router;
     }
 }
