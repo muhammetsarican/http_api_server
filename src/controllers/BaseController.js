@@ -1,8 +1,9 @@
 import mongodb from "mongodb"
 
 class BaseController {
-    constructor(Service) {
+    constructor(Service, Logger) {
         this.Service = Service;
+        this.Logger = Logger;
     }
 
     createOne() {
@@ -13,12 +14,16 @@ class BaseController {
                         success: true,
                         message: response
                     })
+
+                    this.Logger.log("info", response);
                 })
                 .catch(err => {
                     res.status(400).send({
                         success: false,
                         message: err.message
                     })
+
+                    this.Logger.log("error", err.message);
                 })
         }
     }
@@ -33,12 +38,16 @@ class BaseController {
                         success: true,
                         message: response
                     })
+
+                    this.Logger.log("info", response);
                 })
                 .catch(err => {
                     res.status(400).send({
                         success: false,
                         message: err.message
                     })
+
+                    this.Logger.log("error", err.message);
                 })
         }
     }
@@ -51,12 +60,16 @@ class BaseController {
                         success: true,
                         message: response
                     })
+
+                    this.Logger.log("info", response);
                 })
                 .catch(err => {
                     res.status(400).send({
                         success: false,
                         message: err.message
                     })
+
+                    this.Logger.log("error", err.message);
                 })
         }
     }
@@ -73,12 +86,16 @@ class BaseController {
                         success: true,
                         message: response
                     })
+
+                    this.Logger.log("info", response);
                 })
                 .catch(err => {
                     res.status(400).send({
                         success: false,
                         message: err.message
                     })
+
+                    this.Logger.log("error", err.message);
                 })
         }
     }
@@ -93,12 +110,16 @@ class BaseController {
                         success: true,
                         message: response
                     })
+
+                    this.Logger.log("info", response);
                 })
                 .catch(err => {
                     res.status(400).send({
                         success: false,
                         message: err.message
                     })
+
+                    this.Logger.log("error", err.message);
                 })
         }
     }

@@ -1,4 +1,4 @@
-import { logger } from "../scripts/logger/UserLogger.js";
+import { createLogger } from "../scripts/logger/index.js";
 import UserService from "../services/UserService.js";
 import { generateAccessToken, generateRefreshToken } from "../utils/GenerateTokens.js";
 import HashPassword from "../utils/HashPassword.js";
@@ -6,9 +6,11 @@ import BaseController from "./BaseController.js";
 
 import mongodb from "mongodb";
 
+const UserLogger = createLogger("user");
+
 class UserController extends BaseController {
     constructor() {
-        super(UserService);
+        super(UserService, UserLogger);
     }
 
     createOne() {
@@ -27,7 +29,7 @@ class UserController extends BaseController {
                             }
                         }
                     })
-                    logger.log("info", response);
+                    UserLogger.log("info", response);
                 })
                 .catch(err => {
                     res.status(400).send({
