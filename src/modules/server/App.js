@@ -2,6 +2,7 @@
 
 import url from "url";
 import http from "http";
+import clo from "../../helpers/CustomConsoleLog.js";
 
 class App {
     path = "/";
@@ -91,7 +92,7 @@ class App {
                 this.runMiddlewares(0, mainPath)
             }
             catch (err) {
-                throw err;
+                clo.g(err);
             }
         }
         catch {
