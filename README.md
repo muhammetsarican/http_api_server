@@ -1,5 +1,5 @@
 
-# Http Server API
+# Http API Server
 
 I created server app without using any framework. I specialized it similar with express js, you can use same methods with it.
 ## 💻 Tech Stack
