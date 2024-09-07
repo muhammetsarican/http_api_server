@@ -6,6 +6,13 @@ const createValidation = Joi.object({
     description: Joi.string().min(10)
 })
 
+const updateValidation = Joi.object({
+    title: Joi.string(),
+    keyword: Joi.string().min(10),
+    description: Joi.string().min(10)
+})
+
 export const schemas = {
-    createValidation
+    createValidation,
+    updateValidation
 }
